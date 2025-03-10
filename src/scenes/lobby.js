@@ -1,3 +1,5 @@
+import { loadFightScene } from "./fight.js";
+
 const slotCharacter = [
   { id: 1, content: "word" },
   { id: 2, content: "city" },
@@ -41,6 +43,10 @@ function loadLobbyScene(container) {
   }
 
   generateSlot();
+
+  document.getElementById("start-game").addEventListener("click", () => {
+    loadFightScene(container);
+  });
 }
 
 export { loadLobbyScene };
