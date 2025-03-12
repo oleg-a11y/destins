@@ -1,3 +1,5 @@
+import { loadFightScene } from "./fight.js";
+
 const slotCharacter = [
   { id: 1, content: "word" },
   { id: 2, content: "city" },
@@ -9,38 +11,47 @@ const slotCharacter = [
   { id: 8, content: "capitan" },
 ];
 
+let selectedCharacter = null; 
+
 function loadLobbyScene(container) {
   container.innerHTML = `
-            <div class="lobby">
-              <h1>Выберите персонажа</h1>
-              <div class="lobby-screen"></div>
-              <button id="start-game">Начать игру</button>
-            </div>
-    `;
+    <div class="lobby">
+      <h1>Выберите персонажа</h1>
+      <div class="lobby-screen"></div>
+      <button id="start-game" disabled>Начать игру</button>
+    </div>
+  `;
 
   function generateSlot() {
     const lobbyScreen = document.querySelector(".lobby-screen");
-
     slotCharacter.forEach((item) => {
       lobbyScreen.innerHTML += `
-        <div id="${item.id}" class="character-slot">
+        <div id="char-${item.id}" class="character-slot">
           ${item.content}
         </div>
       `;
+    });
 
-      const characterSlots = lobbyScreen.querySelectorAll(".character-slot");
+    const characterSlots = document.querySelectorAll(".character-slot");
+    characterSlots.forEach((slot) => {
+      slot.addEventListener("click", () => {
+        characterSlots.forEach((c) => c.classList.remove("selected"));
+        slot.classList.add("selected");
 
-      characterSlots.forEach((slot) => {
-        slot.addEventListener("click", () => {
-          characterSlots.forEach((c) => c.classList.remove("selected"));
-
-          slot.classList.add("selected");
-        });
+        selectedCharacter = slot.id; 
+        document.getElementById("start-game").disabled = false; 
       });
     });
   }
 
   generateSlot();
+
+  const startGame = document.getElementById("start-game");
+  startGame.addEventListener("click", () => {
+    if (selectedCharacter) {
+      loadFightScene(container, selectedCharacter); 
+    }
+  });
 }
 
 export { loadLobbyScene };
